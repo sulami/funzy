@@ -6,9 +6,9 @@ import           Data.Ord  (comparing)
 run :: IO ()
 run = return ()
 
-runner :: String -> [String] -> [String]
-runner _  [] = []
-runner "" xs = sort xs
-runner x  xs = filter (isSubsequenceOf x) xs
+finder :: String -> [String] -> [String]
+finder _  [] = []
+finder "" xs = sort xs
+finder x  xs = filter (isSubsequenceOf x) xs
 
 

@@ -18,19 +18,19 @@ main = hspec $ do
     it "exits gracefully" $
       run `shouldReturn` ()
 
-  describe "the runner" $ do
+  describe "the finder" $ do
     let nonNull = arbitrary `suchThat` (not . null)
 
     it "returns an empty list without any input data" $
       property $
-        \x -> runner x [] `shouldBe` []
+        \x -> finder x [] `shouldBe` []
 
     it "returns the sorted input if the search term is empty" $
       property $
-        \x -> runner "" x `shouldBe` sort x
+        \x -> finder "" x `shouldBe` sort x
 
     it "only returns proper superstrings of the search term" $
       forAll nonNull $ \x -> property $
-        \y -> runner x y `shouldBe` filter (isSubsequenceOf x) y
+        \y -> finder x y `shouldBe` filter (isSubsequenceOf x) y
 
 
