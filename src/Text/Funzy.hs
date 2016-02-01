@@ -9,6 +9,10 @@ run = return ()
 finder :: String -> [String] -> [String]
 finder _  [] = []
 finder "" xs = sort xs
-finder x  xs = filter (isSubsequenceOf x) xs
-
+finder x  xs = sortBy (comparing (density x)) $ filter (isSubsequenceOf x) xs
+  where
+    density []     _  = 0
+    density _      [] = error "failed do calculate match density"
+    density (x:xs) y  = let (a,b) = span (/= x) y
+                        in 1 + length a + density xs (drop 1 b)
 
