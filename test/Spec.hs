@@ -47,6 +47,12 @@ main = hspec $ do
         \x -> let rv = finder x y
               in rv `shouldBe` sortBy (comparing (proximity x)) rv
 
+    it "returns the results with equal scores sorted by length" $ do
+      let paddings = listOf . listOf $ elements ['a'..'y']
+      forAll paddings $
+        \p -> let rv = finder "zzz" $ map (++ "zzz") p
+              in rv `shouldBe` sortBy (comparing length) rv
+
 density :: String -> String -> Int
 density []      _ = 0
 density x@(h:_) y = density' x $ dropWhile (/= h) y
