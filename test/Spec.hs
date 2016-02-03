@@ -38,7 +38,7 @@ main = hspec $ do
 
     it "returns the results with the most dense match first" $
       forAll options $ \y -> forAll (matchInput y) $
-        \x -> let rv = finder x y
+        \x -> let rv = finder x $ map (dropWhile (/= head x)) y
               in rv `shouldBe` sortBy (comparing (density x)) rv
 
     it "returns the results with the closest match first" $ do
