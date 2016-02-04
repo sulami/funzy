@@ -42,15 +42,18 @@ main = hspec $ do
               in rv `shouldBe` sortBy (comparing (density x)) rv
 
     it "returns the results with the closest match first" $ do
-      let proximity (x:xs) = length . takeWhile (/=x)
-      forAll options $ \y -> forAll (matchInput y) $
-        \x -> let rv = finder x y
-              in rv `shouldBe` sortBy (comparing (proximity x)) rv
+      let paddings = listOf . listOf $ elements ['a'..'y']
+          proximity (x:xs) = length . takeWhile (/=x)
+      forAll paddings $
+        \p -> let ma = "zzz"
+                  rv = finder ma $ map (\x -> x ++ ma ++ x) p
+              in rv `shouldBe` sortBy (comparing (proximity ma)) rv
 
     it "returns the results with equal scores sorted by length" $ do
       let paddings = listOf . listOf $ elements ['a'..'y']
       forAll paddings $
-        \p -> let rv = finder "zzz" $ map (++ "zzz") p
+        \p -> let ma = "zzz"
+                  rv = finder ma $ map (\x -> x ++ ma ++ x) p
               in rv `shouldBe` sortBy (comparing length) rv
 
 density :: String -> String -> Int
