@@ -25,6 +25,7 @@ executable funzy
   ghc-options:         -threaded -rtsopts -with-rtsopts=-N
   build-depends:       base
                      , funzy
+                     , options
   default-language:    Haskell2010
 
 test-suite funzy-test
@@ -35,6 +36,7 @@ test-suite funzy-test
                      , funzy
                      , QuickCheck
                      , hspec
+                     , proctest
   ghc-options:         -threaded -rtsopts -with-rtsopts=-N
   default-language:    Haskell2010
 

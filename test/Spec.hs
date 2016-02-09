@@ -1,7 +1,11 @@
 import           Data.List       (isSubsequenceOf, sort, sortBy, subsequences)
 import           Data.Ord        (comparing)
+import           System.IO       (BufferMode (..), IOMode (..), hClose,
+                                  hGetContents, hPutStr, hSetBuffering,
+                                  openTempFile)
 
 import           Test.Hspec
+import qualified Test.Proctest   as PT
 import           Test.QuickCheck
 
 import           Text.Funzy
@@ -55,6 +59,17 @@ main = hspec $ do
         \p -> let ma = "zzz"
                   rv = finder ma $ map (\x -> x ++ ma ++ x) p
               in rv `shouldBe` sortBy (comparing length) rv
+
+  describe "the interface" $
+    it "displays the sorted first five items of input data on startup" $ do
+      (ttyPath, tty) <- openTempFile "/tmp" "funzy-faux"
+      (hIn, _, _, _) <- PT.run "stack" ["exec", "funzy", "--", "--tty", ttyPath]
+      hPutStr hIn $ unlines [ [c] | c <- reverse ['a'..'z'] ]
+      PT.sleep $ PT.seconds 0.5
+      hSetBuffering tty NoBuffering
+      screen <- lines <$> hGetContents tty
+      screen `shouldBe` "" : [ [c] | c <- ['a'..'e'] ]
+      hClose tty
 
 density :: String -> String -> Int
 density []      _ = 0
